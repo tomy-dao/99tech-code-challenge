@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: click-score-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: click-score
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - click-score-network
+
+  api:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile.dev
+    container_name: click-score-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/click-score?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - click-score-network
+    volumes:
+      - ./services/backend:/app
+      - /app/node_modules
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile.dev
+    container_name: click-score-frontend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+      - VITE_API_BASE_API_URL=http://localhost:3000
+      - VITE_SOCKET_BASE_URL=http://localhost:8080
+    volumes:
+      - ./services/frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    networks:
+      - click-score-network
+  socket:
+    build:
+      context: ./services/socket
+      dockerfile: Dockerfile.dev
+    container_name: click-score-socket
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - BACKEND_URL=http://api:3000
+      - BACKEND_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic29ja2V0Iiwic3lzdGVtIjp0cnVlfQ.2pAEsjv3XUJ3AsTNlxWX0IfIU-A3pSZEi_4kSiAsm9M
+
+    volumes:
+      - ./services/socket:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    networks:
+      - click-score-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  click-score-network:
+    driver: bridge

@@ -1,0 +1,28 @@
+{
+  "name": "sum-calculator-cli",
+  "version": "1.0.0",
+  "description": "Command-line interface for calculating sum from 1 to n using different algorithms",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node cli.ts",
+    "cli": "ts-node cli.ts"
+  },
+  "keywords": [
+    "typescript",
+    "cli",
+    "algorithm",
+    "sum",
+    "gauss",
+    "performance"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
