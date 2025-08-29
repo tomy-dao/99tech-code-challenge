@@ -18,7 +18,9 @@ RUN npm i
 RUN npm run build
 
 # Expose port
-EXPOSE 3000
+ARG PORT=3000
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
 # Start the application
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev", "--port", "$PORT"]

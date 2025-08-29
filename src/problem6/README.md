@@ -60,6 +60,18 @@ docker-compose up
 
 ## 🏗️ Architecture Overview
 
+### System Architecture
+
+![Architecture Diagram](./.docs/architecture.png)
+
+The application follows a microservices architecture with the following components:
+
+- **Frontend (React + Vite)**: User interface for registration, login, and real-time clicking game
+- **Backend API (Express + TypeScript)**: Handles authentication, user management, and data persistence
+- **Socket Server (Socket.io)**: Manages real-time click events, game sessions, and leaderboard updates
+- **MongoDB**: Stores user data, authentication information, and game statistics
+
+
 ### Services
 
 #### 1. **Frontend** (Port 8000)
